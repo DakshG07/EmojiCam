@@ -1,0 +1,144 @@
+<html>
+<head>
+  <title>Video Server Test</title>
+  <style>
+		@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;900&display=swap');
+
+		h1, p{
+			color: black;
+		}
+		* {
+			font-family: 'Source Sans Pro';
+		}
+		p {
+			font-size:medium;
+		}
+		body {
+			background: #ffffff;
+		}
+		#welcome {
+			text-align: center;
+			font-family: 'Source Sans Pro';
+			font-weight: 900;
+			font-size: 50px;
+			margin-top: 5%;
+		}
+		.center {
+  			text-align: center;
+		}
+    .center-block {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 640;
+      height: 480;
+      border-radius: 12px;
+    }
+		.btn {
+			color: white;
+			background: #FFEE59;
+			box-shadow: 0px 19px 25px -2px rgba(255, 238, 89, 0.27);
+			border-radius: 76px;
+			border: none;
+			position: absolute;
+			padding-left: 15px;
+			padding-right: 15px;
+			height: 50px;
+			width: 150px;
+			margin: 0 auto;
+			left: 25%;
+			right: 25%;
+			transition: 0.5s;
+			font-size: medium;
+		}
+		.btn:hover {
+			transform: translate(0, -5px);
+		}
+		.desc {
+			position: relative;
+			top: -15px;
+		}
+  </style>
+</head>
+<body>
+  <video id="video" width="640" height="480" autoplay style="background-color: grey;display:none"></video>
+  <canvas id="canvas" width="640" height="480" style="background-color: grey;display:none;"></canvas>
+  <div class="center-block">
+    <img id="image" src="" width="640" height="480" style="background-color: grey;border-radius: 25px;"></img>
+  </div>
+  <script>
+  
+  // Elements for taking the snapshot
+  var video = document.getElementById('video');
+  
+  // Element to display snapshot
+  
+      // you need canvas to get image - canvas can be hidden using `createElement("canvas")`
+      // var canvas = document.createElement("canvas");
+     
+  var canvas = document.getElementById('canvas');
+  var context = canvas.getContext('2d');
+  
+  var image = document.getElementById('image');
+  var image64 = document.getElementById('image64');
+  
+  // Get access to the camera!
+  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      // Not adding `{ audio: true }` since we only want video now
+      navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+          //video.src = window.URL.createObjectURL(stream);
+          video.srcObject = stream;
+          video.play();
+      
+          //console.log('setInterval')
+          window.setInterval(function() {
+              //context.drawImage(video, 0, 0);
+              context.drawImage(video, 0, 0, 640, 480); // better use size because camera may gives data in different size then <video> is displaying
+              
+              //image64.src = canvas.toDataURL();  
+              canvas.toBlob(upload, "image/jpeg");
+          }, 100);    
+      });
+  }
+  
+  
+  function upload(file) {
+  
+      // create form 
+      var formdata =  new FormData();
+      
+      // add file to form
+      formdata.append("snap", file);
+      
+      // create AJAX connection
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "{{ url_for('upload') }}", true);
+      xhr.responseType = 'blob';   
+      // define function which get response
+      xhr.onload = function() {
+          
+          if(this.status = 200) {
+              //console.log(this.response);
+          } else {
+              console.error(xhr);
+          }
+          
+          //alert(this.response);
+  
+          //img.onload = function(){
+          //    ctx.drawImage(img, 0, 0)
+          //}
+  
+          image.src = URL.createObjectURL(this.response); // blob
+      };
+      
+      // send form in AJAX
+      xhr.send(formdata);
+      
+      //image.src = URL.createObjectURL(file);
+  }
+  
+      
+</script>
+</body>
+</html>

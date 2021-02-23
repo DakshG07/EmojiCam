@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<style>
+		@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;900&display=swap');
+
+		h1, p{
+			color: black;
+		}
+		* {
+			font-family: 'Source Sans Pro';
+		}
+		p {
+			font-size:medium;
+		}
+		body {
+			background: #ffffff;
+		}
+		#welcome {
+			text-align: center;
+			font-family: 'Source Sans Pro';
+			font-weight: 900;
+			font-size: 50px;
+			margin-top: 5%;
+		}
+		.center {
+  			text-align: center;
+		}
+		.btn {
+			color: white;
+			background: #FFEE59;
+			box-shadow: 0px 19px 25px -2px rgba(255, 238, 89, 0.27);
+			border-radius: 76px;
+			border: none;
+			position: absolute;
+			padding-left: 15px;
+			padding-right: 15px;
+			height: 50px;
+			width: 150px;
+			margin: 0 auto;
+			left: 25%;
+			right: 25%;
+			transition: 0.5s;
+			font-size: medium;
+		}
+		.btn:hover {
+			transform: translate(0, -5px);
+		}
+		.desc {
+			position: relative;
+			top: -15px;
+		}
+</style>
+		<title>EmojiCam</title>
+	</head>
+	<body>
+		<h1 id="welcome">
+			Introducing, EmojiCam.
+		</h1>
+		<p class="center desc">
+			Emoji the world.
+		</p>
+		<button class="center btn" onclick="window.location.href='{{ url_for('camera', _external=True) }}'" >Try It</button>
+	</body>
+</html>
